@@ -1,0 +1,16 @@
+{
+    "name": "tedbandi/t-dfraimvork",
+    "authors": [
+        {
+            "name": "Стас",
+            "email": "cjb2018@yandex.ru"
+        }
+    ],
+    "require": {},
+    "autoload" :{
+        "psr-4" : {
+            "tbf\\" : "./"
+        },
+        "files": ["config/routes.php"]
+    }
+}
