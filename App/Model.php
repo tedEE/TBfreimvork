@@ -8,6 +8,12 @@ abstract class Model
 
     public $id;
     const TABLE = "";
+
+    protected function requestExecution($sql ,$res)
+    {
+        $db = new Db();
+        $db->execute($sql, $res);
+    }
     public static function findAll()
     {
         $db = new Db();
@@ -27,25 +33,21 @@ abstract class Model
     {
         $fields = get_object_vars($this); //возвращает поля текущего обЪкта
         $cols = [];
-        $data = [];
+        $res = [];
 
         foreach ($fields as $name => $value){
             if ('id' == $name){
                 continue;
             }
             $cols[] = $name;
-            $data[':' . $name] = $value;
+            $res[':' . $name] = $value;
 
         }
-        var_dump($cols);
-        var_dump($data);
 
-        $sql = ('INSERT INTO ' . static::TABLE . '('. implode(', ', $cols).')VALUES ('.implode(', ', array_keys($data)).')') ;
+        $sql = ('INSERT INTO ' . static::TABLE . '('. implode(', ', $cols).')VALUES ('.implode(', ', array_keys($res)).')') ;
 
-        echo $sql;
 
-        $db = new Db();
-//        $db->execute($sql, $data);
+        $this->requestExecution($sql , $res);
     }
 
     public function update($id, $row ,$data )
@@ -56,8 +58,18 @@ abstract class Model
         ];
 
         $sql = ('UPDATE '  .'`' . static::TABLE  . '`' . ' SET `'. $row. '` = :data WHERE `id` = :id' ) ;
-        echo $sql;
-        $db = new Db();
-        $db->execute($sql, $res);
+        $this->requestExecution($sql , $res);
+    }
+
+
+
+    public function delete ($id )
+    {
+        $res = [
+            ':id' => $id
+        ];
+
+        $sql = ('DELETE FROM `' . static::TABLE . '` WHERE `' . static::TABLE . '` . `id` = :id' ) ;
+        $this->requestExecution($sql , $res);
     }
 }

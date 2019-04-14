@@ -12,13 +12,14 @@ $router->run();
 
 $prod = new \tbf\App\Models\Product();
 $prod->price = 50;
-$prod->title = 'Какойто гриб';
+$prod->title = 'Криб';
 $prod->rus_name = 'Невкусный гриб';
 $prod->img = 'img';
 $prod->cat = 'poisonous';
-$prod->descr = "Какойто очень невкусныйгриб";
-$prod->insert();
-$prod->update(29, 'img' , 'cartinka');
+$prod->descr = "невкусныйгриб";
+//$prod->insert();
+//$prod->delete(31);
+//$prod->update(32, 'title', 'Гриб');
 
 
 //var_dump($data);
