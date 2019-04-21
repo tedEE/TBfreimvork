@@ -24,7 +24,10 @@ class View implements \Countable, \Iterator
     {
         return $this->data[$name] ?? null;
     }
-
+    public function __isset($name)
+    {
+        return isset($this->data[$name]);
+    }
     public function render($template)
     {
         ob_start();
