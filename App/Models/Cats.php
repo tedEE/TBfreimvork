@@ -3,7 +3,7 @@
 namespace tbf\App\Models;
 
 
-use tbf\App\Model;
+use tbf\App\Core\Model;
 
 class Cats extends Model
 {

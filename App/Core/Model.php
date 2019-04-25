@@ -1,18 +1,22 @@
 <?php
 
-namespace tbf\App;
+namespace tbf\App\Core;
 
-use tbf\App\Db;
 abstract class Model
 {
 
-    public $id;
+    protected $id;
+    protected $db;
     const TABLE = "";
+
+    public function __construct()
+    {
+        $this->db = new Db();
+    }
 
     protected function requestExecution($sql ,$res)
     {
-        $db = new Db();
-        $db->execute($sql, $res);
+        $this->db->execute($sql, $res);
     }
     public static function findAll()
     {
@@ -21,12 +25,17 @@ abstract class Model
         return $db->query($sql, [] ,static::class);
     }
 
+    /**
+     * @param $id
+     * @return null
+     */
     public static function findById($id)
     {
         $data = [':id' => $id];
         $db = new Db();
         $sql = 'SELECT * FROM ' . static::TABLE . ' WHERE id=:id';
-        return $db->query($sql, $data ,static::class);
+        $data = $db->query($sql, $data ,static::class);
+        return $data ? $data[0] : null;
     }
 
     public function insert()

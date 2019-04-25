@@ -4,12 +4,13 @@ namespace tbf\App\Models;
 
 
 
-use tbf\App\Model;
+use tbf\App\Core\Model;
 
 class Product extends Model
 {
     const TABLE = 'products';
 
+    public $id;
     public $title;
     public $cat;
     public $price;

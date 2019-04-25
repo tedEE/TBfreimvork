@@ -1,6 +1,6 @@
 <?php
 
-namespace tbf\App;
+namespace tbf\App\Core;
 
 
 class View implements \Countable, \Iterator

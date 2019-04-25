@@ -1,19 +1,15 @@
 <?php
 
-namespace tbf\components;
+namespace tbf\App\Core;
 
 class Router
 {
 
-    private $routes = [
-        'news/([a-z]+)/([0-9]+)' => 'news/$1/$2',
-//        'news' => 'news/index',
-//        'products' => 'product/list'
-    ];
+    private $routes = [];
 
     public function __construct()
     {
-
+        $this->routes = require CONFIG . 'routes.php';
     }
 
 
@@ -33,22 +29,30 @@ class Router
     public function run()
     {
         $uri = $this->getUri();
+//        var_dump($uri);
 
         foreach ($this->routes as $uriPattern => $path){
-
-            if (preg_match("~$uriPattern~", $uri)){//проверка есть ли такой роут в масиве роутов
+//            xprint($uriPattern);
+//            xprint($path);
+            //проверка есть ли такой роут в масиве роутов
+            if (preg_match("~$uriPattern~", $uri)){
 
 
                 // Получаем внутренний путь из внешнего согласно правилу.
 
                 $internalRoute = preg_replace("~$uriPattern~", $path, $uri);
 
-                $segments = explode('/', $internalRoute);//создание массива контроллер=>актион из запроса
+                //создание массива контроллер=>актион из запроса
+                $segments = explode('/', $internalRoute);
+//                xprint($segments, "массив segments");
 
                 $controllerName = ucfirst(array_shift($segments).'Controller');
+//                xprint($controllerName , 'controllerName');
                 $actionName = 'action'.ucfirst((array_shift($segments)));
+//                xprint($actionName , 'actionName');
                 $params = $segments;
-                echo $actionName . "<br>";
+//                xprint($params, 'params');
+//                echo $actionName . "<br>";
 //                echo $controllerName . "<br>";
 //                var_dump($params);
                 $controllerClass = '\\tbf'.'\\App\\Controllers\\' .$controllerName;

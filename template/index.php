@@ -9,12 +9,18 @@
 </head>
 <body>
 <ul> Категории
-
-
+    <?php foreach ($this->cats as $cat): ?>
+    <li>
+        <?php echo $cat->rus_name?>
+    </li>
+    <?php endforeach; ?>
 </ul>
     <?php foreach ($this->products as $prod): ?>
     <article>
-        <h1><?php echo $prod->rus_name?></h1>
+        <h2>
+            <a href="/product/<?php echo $prod->id;?>"><?php echo $prod->rus_name?>
+            </a>
+        </h2>
         <p><?php echo $prod->descr ?></p>
     </article>
     <hr>

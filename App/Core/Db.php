@@ -1,13 +1,13 @@
 <?php
 
-namespace tbf\App;
+namespace tbf\App\Core;
 
 class Db
 {
     public $dbh;
     public function __construct()
     {
-        $config = (include __DIR__ . '/../config/db.php')['db'];
+        $config = (include __DIR__ . '/../../config/db.php')['db'];
         $this->dbh = new \PDO(
             'mysql:host='.$config['host'] .';dbname=' .$config['dbname'],
             $config['user'],
