@@ -8,11 +8,11 @@ require_once '../config/const.php';
 $prod = new \tbf\App\Models\Product();
 
 $data = [
-    'title' => 'new dsfdfsdf'
+    'title' => 'new grip'
 ];
 $prod->rus_name = 'тестовый гриб';
 //$prod->insert();
-$prod->update( $data , ['id' => 38] );
+//$prod->update( $data , ['id' => 38] );
 
 //const ROOT = __DIR__;
 //const CONFIG = ROOT . '/config/';

@@ -55,6 +55,7 @@ abstract class Model
     }
 
     /**
+     * $data = [ 'title' => 'new grip' ];
      * Пока работает только так ->update( $data , ['id' => 38] );
      * надо допилить чтб можно было id передавать как int
      * @param $data
@@ -92,6 +93,12 @@ abstract class Model
         $db = new Db();
         $db->execute($sql, $res);
 
+    }
+
+    public static function query($sql)
+    {
+        $db = new Db();
+        return $db->query($sql, [] ,static::class);
     }
 
 
