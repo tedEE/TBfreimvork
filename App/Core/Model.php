@@ -1,84 +1,98 @@
 <?php
-
 namespace tbf\App\Core;
 
 abstract class Model
 {
-
-    protected $id;
-    protected $db;
+    public $id;
     const TABLE = "";
-
-    public function __construct()
-    {
-        $this->db = new Db();
-    }
-
-    protected function requestExecution($sql ,$res)
-    {
-        $this->db->execute($sql, $res);
-    }
     public static function findAll()
     {
         $db = new Db();
         $sql = 'SELECT * FROM ' . static::TABLE ;
         return $db->query($sql, [] ,static::class);
     }
-
-    /**
-     * @param $id
-     * @return null
-     */
     public static function findById($id)
     {
         $data = [':id' => $id];
         $db = new Db();
         $sql = 'SELECT * FROM ' . static::TABLE . ' WHERE id=:id';
-        $data = $db->query($sql, $data ,static::class);
-        return $data ? $data[0] : null;
+        return $db->query($sql, $data ,static::class);
     }
 
     public function insert()
     {
         $fields = get_object_vars($this); //возвращает поля текущего обЪкта
         $cols = [];
-        $res = [];
-
-        foreach ($fields as $name => $value){
-            if ('id' == $name){
+        $data = [];
+        foreach ($fields as $name => $value) {
+            if ('id' == $name) {
                 continue;
             }
             $cols[] = $name;
-            $res[':' . $name] = $value;
-
+            $data[':' . $name] = $value;
         }
-
-        $sql = ('INSERT INTO ' . static::TABLE . '('. implode(', ', $cols).')VALUES ('.implode(', ', array_keys($res)).')') ;
-
-
-        $this->requestExecution($sql , $res);
+//        xprint($cols, 'insert $cols');
+//        xprint($data, 'insert $data');
+        $sql = ('INSERT INTO ' . static::TABLE . '('. implode(', ', $cols).')VALUES ('.implode(', ', array_keys($data)).')') ;
+        $db = new Db();
+        $db->execute($sql, $data);
     }
-
-    public function update($id, $row ,$data )
-    {
-        $res = [
-            ':id' => $id,
-            ':data' => $data
-        ];
-
-        $sql = ('UPDATE '  .'`' . static::TABLE  . '`' . ' SET `'. $row. '` = :data WHERE `id` = :id' ) ;
-        $this->requestExecution($sql , $res);
-    }
-
-
 
     public function delete ($id )
     {
         $res = [
             ':id' => $id
         ];
-
         $sql = ('DELETE FROM `' . static::TABLE . '` WHERE `' . static::TABLE . '` . `id` = :id' ) ;
-        $this->requestExecution($sql , $res);
+        $db = new Db();
+        $db->execute($sql, $res);
     }
+
+    public function execSql ($sql, $data = [])
+    {
+        $db = new Db();
+        $db->execute($sql, $data);
+    }
+
+    /**
+     * Пока работает только так ->update( $data , ['id' => 38] );
+     * надо допилить чтб можно было id передавать как int
+     * @param $data
+     * @param $sampling_field
+     */
+	    public function update($data, $sampling_field )
+    {
+        $fields = '';
+        $wherwFields = [];
+
+        if (!is_int($sampling_field)) {
+            foreach ($sampling_field as $key => $val) {
+                $wherwFields = "`$key` = :$key";
+            }
+        }
+
+        foreach ($data as $name => $value) {
+            $res[':' . $name] = $value;
+        }
+        foreach ($sampling_field as $name => $value) {
+            $sampling[':' . $name] = $value;
+        }
+
+        foreach ($data as $key => $val) {
+            $fields .= '`' . $key . '`' . '=:' . $key . ', ';
+        }
+
+        $res = array_merge($res, $sampling);
+
+
+        $fields = rtrim($fields); // удаление пустой строки
+        $fields = rtrim($fields, ',');// удаление лишней запятой
+        $sql = ('UPDATE '  .'`' . static::TABLE  . '`' . " SET $fields WHERE $wherwFields" ) ;
+
+        $db = new Db();
+        $db->execute($sql, $res);
+
+    }
+
+
 }
